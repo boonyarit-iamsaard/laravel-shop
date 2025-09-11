@@ -1,0 +1,44 @@
+name: laravel-shop
+
+services:
+    postgres:
+        container_name: laravel-shop-postgres
+        image: docker.io/postgres:15-alpine
+        ports:
+            - '${DB_PORT:-5432}:5432'
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: ${DB_DATABASE:-laravel-shop}
+            POSTGRES_USER: ${DB_USERNAME:-laravel-shop}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-laravel-shop}
+        restart: unless-stopped
+        networks:
+            - laravel-shop-network
+
+    mailpit:
+        container_name: laravel-shop-mailpit
+        image: docker.io/axllent/mailpit:latest
+        ports:
+            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+            - '${FORWARD_MAILPIT_UI_PORT:-8025}:8025'
+        restart: unless-stopped
+        volumes:
+            - mailpitdata:/data
+        environment:
+            MP_MAX_MESSAGES: 5000
+            MP_DATABASE: /data/mailpit.db
+            MP_SMTP_AUTH_ACCEPT_ANY: 1
+            MP_SMTP_AUTH_ALLOW_INSECURE: 1
+        networks:
+            - laravel-shop-network
+
+networks:
+    laravel-shop-network:
+        name: laravel-shop
+
+volumes:
+    pgdata:
+        name: laravel-shop-pgdata
+    mailpitdata:
+        name: laravel-shop-mailpitdata
