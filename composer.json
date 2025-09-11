@@ -58,12 +58,15 @@
         ],
         "format:fix": "npm run format:fix",
         "lint:fix": "npm run lint:fix",
+        "pint:fix": "pint",
         "test:format": "npm run format:check",
         "test:lint": "npm run lint:check",
         "test:pest": "pest",
+        "test:pint": "pint --test",
         "test:static": [
             "@test:format",
-            "@test:lint"
+            "@test:lint",
+            "@test:pint"
         ],
         "test": [
             "@test:static",
